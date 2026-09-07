@@ -20,7 +20,7 @@ services:
 
   # ── React + Vite Frontend Static Site ─────────────────────
   - type: web
-    name: researchpilot-frontend
+    name: researchpilot
     env: static
     rootDir: frontend
     buildCommand: npm install && npm run build

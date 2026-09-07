@@ -18,7 +18,7 @@ COPY . .
 # Ensure upload directory exists
 RUN mkdir -p app/uploads app/chroma_db
 
-# Expose port (Hugging Face Spaces Docker SDK defaults to 7860)
-EXPOSE 7860
+# Expose port (most Docker hosts set PORT via env var)
+EXPOSE 8000
 
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-7860}"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

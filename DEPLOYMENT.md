@@ -17,7 +17,7 @@
 6. Once `researchpilot-backend` is created, open its **Environment** tab and set:
    - `MISTRAL_API_KEY` — your key from [console.mistral.ai](https://console.mistral.ai)
 7. Render builds and deploys both services.
-8. **Important**: Render assigns each service a unique URL (often with a random suffix, e.g. `researchpilot-backend-oxjq.onrender.com`) — the exact suffix isn't known until after the backend is created. Once you have it, open `render.yaml`, update the `VITE_API_BASE_URL` value under `researchpilot-frontend` to match your actual backend URL + `/api`, commit, push, and trigger a redeploy of the frontend service (Render's cross-service `fromService` env var reference doesn't support the URL templating needed to wire this automatically).
+8. **Important**: Render assigns each service a unique URL (often with a random suffix, e.g. `researchpilot-backend-xxxx.onrender.com`) — the exact suffix isn't known until after the backend is created. Once you have it, open `render.yaml`, update the `VITE_API_BASE_URL` value under `researchpilot` (frontend) to match your actual backend URL + `/api`, commit, push, and trigger a redeploy of the frontend service (Render's cross-service `fromService` env var reference doesn't support the URL templating needed to wire this automatically).
 9. Your app will be live at whatever URLs Render assigned, e.g.:
    - Frontend: `https://researchpilot-frontend-xxxx.onrender.com`
    - Backend: `https://researchpilot-backend-xxxx.onrender.com` (health check at `/health`, API routes under `/api`)

@@ -34,4 +34,4 @@ services:
       # support URL templating, so this is hardcoded to the actual backend
       # URL. Update this if the backend service is ever renamed/recreated.
       - key: VITE_API_BASE_URL
-        value: https://researchpilot-backend-oxjq.onrender.com/api
+        value: https://researchpilot-backend-jobz.onrender.com/api

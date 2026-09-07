@@ -1,8 +1,13 @@
+import os
+from dotenv import load_dotenv
 from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_mistralai import MistralAIEmbeddings
 
-embedding_model = HuggingFaceEmbeddings(
-    model_name="BAAI/bge-base-en-v1.5"
+load_dotenv()
+
+embedding_model = MistralAIEmbeddings(
+    model="mistral-embed",
+    api_key=os.getenv("MISTRAL_API_KEY"),
 )
 
 vector_db = Chroma(

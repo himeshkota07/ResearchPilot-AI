@@ -15,3 +15,24 @@ services:
         value: open-mistral-7b
       - key: MISTRAL_API_KEY
         sync: false # Set in Render dashboard
+
+  # ── React + Vite Frontend Static Site ─────────────────────
+  - type: web
+    name: researchpilot-frontend
+    env: static
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: researchpilot-backend
+          property: host
+        transformation: "https://{{.host}}/api"

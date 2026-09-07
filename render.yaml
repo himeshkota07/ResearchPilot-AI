@@ -30,9 +30,8 @@ services:
         source: /*
         destination: /index.html
     envVars:
+      # Render's fromService/property:host cross-service reference doesn't
+      # support URL templating, so this is hardcoded to the actual backend
+      # URL. Update this if the backend service is ever renamed/recreated.
       - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: researchpilot-backend
-          property: host
-        transformation: "https://{{.host}}/api"
+        value: https://researchpilot-backend-oxjq.onrender.com/api

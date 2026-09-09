@@ -1,8 +1,10 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
+import { useAuth } from "./AuthContext";
 
 const ResearchContext = createContext();
 
-const HISTORY_STORAGE_KEY = "rp_paper_history";
+// Scope history storage per logged-in account so users don't see each other's papers.
+const getHistoryKey = (userId) => `rp_paper_history_${userId ?? "guest"}`;
 
 // Pre-seeded sample papers so the user sees a rich history immediately
 const DEFAULT_HISTORY = [
@@ -100,26 +102,46 @@ const DEFAULT_HISTORY = [
 ];
 
 export function ResearchProvider({ children }) {
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+
   const [uploadedFile, setUploadedFile] = useState(null);
   const [summary, setSummary] = useState(null);
   const [gaps, setGaps] = useState(null);
   const [report, setReport] = useState(null);
   const [messages, setMessages] = useState([]);
 
-  // Paper History
-  const [history, setHistory] = useState(() => {
+  // Paper History — scoped to the current account
+  const [history, setHistory] = useState([]);
+  const prevUserIdRef = useRef(undefined);
+
+  useEffect(() => {
+    // Reset the actively-loaded paper/chat when switching accounts (login/logout/switch user)
+    // so one account's in-memory session never leaks into another's view.
+    if (prevUserIdRef.current !== undefined && prevUserIdRef.current !== userId) {
+      setUploadedFile(null);
+      setSummary(null);
+      setGaps(null);
+      setReport(null);
+      setMessages([]);
+    }
+    prevUserIdRef.current = userId;
+
+    const key = getHistoryKey(userId);
     try {
-      const stored = localStorage.getItem(HISTORY_STORAGE_KEY);
+      const stored = localStorage.getItem(key);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        setHistory(Array.isArray(parsed) ? parsed : []);
+        return;
       }
-      localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(DEFAULT_HISTORY));
-      return DEFAULT_HISTORY;
+      // Seed a fresh account with sample papers so history isn't empty on first visit
+      localStorage.setItem(key, JSON.stringify(DEFAULT_HISTORY));
+      setHistory(DEFAULT_HISTORY);
     } catch {
-      return DEFAULT_HISTORY;
+      setHistory(DEFAULT_HISTORY);
     }
-  });
+  }, [userId]);
 
   // Save or update paper in history
   const saveToHistory = ({ file, summary: s, gaps: g, report: r }) => {
@@ -146,7 +168,7 @@ export function ResearchProvider({ children }) {
       );
       const updated = [record, ...filtered];
       try {
-        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(updated));
+        localStorage.setItem(getHistoryKey(userId), JSON.stringify(updated));
       } catch (err) {
         console.warn("Could not save history to localStorage:", err);
       }
@@ -178,7 +200,7 @@ export function ResearchProvider({ children }) {
     setHistory((prev) => {
       const updated = prev.filter((p) => p.id !== id);
       try {
-        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(updated));
+        localStorage.setItem(getHistoryKey(userId), JSON.stringify(updated));
       } catch (err) {
         console.warn(err);
       }
@@ -190,7 +212,7 @@ export function ResearchProvider({ children }) {
   const clearHistory = () => {
     setHistory([]);
     try {
-      localStorage.removeItem(HISTORY_STORAGE_KEY);
+      localStorage.removeItem(getHistoryKey(userId));
     } catch (err) {
       console.warn(err);
     }

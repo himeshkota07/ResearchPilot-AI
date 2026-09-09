@@ -25,7 +25,7 @@ export default function UploadCard({ onAnalysisComplete, loading, setLoading }) 
   const [done, setDone] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const { setUploadedFile } = useResearch();
+  const { setUploadedFile, saveToHistory } = useResearch();
 
   /* ── Drag & Drop ─────────────────────────────────────── */
   const handleDrop = useCallback((e) => {
@@ -73,6 +73,14 @@ export default function UploadCard({ onAnalysisComplete, loading, setLoading }) 
 
       setUploadedFile(file);
       onAnalysisComplete(response.data);
+      if (saveToHistory) {
+        saveToHistory({
+          file,
+          summary: response.data.summary,
+          gaps: response.data.research_analysis ?? response.data.gaps,
+          report: response.data.report,
+        });
+      }
       setDone(true);
       setActiveStep(-1);
       setProgress(100);

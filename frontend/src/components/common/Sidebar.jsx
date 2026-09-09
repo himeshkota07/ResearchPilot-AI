@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, MessageSquare, SearchCode,
   FileText, BarChart3, Settings, ChevronLeft,
-  Sparkles, LogOut, Telescope,
+  Sparkles, LogOut, Telescope, History as HistoryIcon,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/logo.png";
@@ -17,6 +17,7 @@ const analysisMenu = [
   { title: "Analysis",   path: "/analysis",  icon: SearchCode,      description: "Research gaps" },
   { title: "Summary",    path: "/summary",   icon: FileText,        description: "Paper summary" },
   { title: "Report",     path: "/report",    icon: BarChart3,       description: "Full report" },
+  { title: "History",    path: "/history",   icon: HistoryIcon,     description: "Paper history" },
 ];
 
 const generalMenu = [

@@ -11,6 +11,7 @@ import Chat     from "./pages/Chat";
 import Analysis from "./pages/Analysis";
 import Summary  from "./pages/Summary";
 import Report   from "./pages/Report";
+import History  from "./pages/History";
 import Settings from "./pages/Settings";
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
               <Route path="/chat"     element={<Chat />} />
               <Route path="/summary"  element={<Summary />} />
               <Route path="/report"   element={<Report />} />
+              <Route path="/history"  element={<History />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
 
